@@ -12,6 +12,7 @@ import RxSwift
 enum MoviesViewModelState {
     case show([MovieViewModel])
     case error(String)
+    case noResults
 }
 
 protocol MoviesViewModelType {
@@ -19,13 +20,13 @@ protocol MoviesViewModelType {
 }
 
 class MoviesViewModel {
-    
     // MARK: - Properties
-    var showLoadingObservable : Observable<Bool> {
+
+    var showLoadingObservable: Observable<Bool> {
         return showLoadingSubject.asObservable()
     }
     
-    var resultObservable : Observable<MoviesViewModelState> {
+    var resultObservable: Observable<MoviesViewModelState> {
         return resultSubject.asObservable()
     }
     
@@ -41,16 +42,19 @@ class MoviesViewModel {
     }
 }
 
-extension MoviesViewModel: MoviesViewModelType{
-    
-    func fetchMovies(_ request: Request){
+extension MoviesViewModel: MoviesViewModelType {
+    func fetchMovies(_ request: Request) {
         showLoadingSubject.onNext(true)
         
         useCase.fetchMovies(request).subscribe { [weak self] response in
-            guard let `self` = self else {return}
-            switch response{
+            guard let `self` = self else { return }
+            switch response {
             case .success(let data):
-                self.resultSubject.onNext(.show(self.makeDatasource(movies: data.items ?? [])))
+                if let movies = data.items, !movies.isEmpty {
+                    self.resultSubject.onNext(.show(self.makeDatasource(movies: movies)))
+                } else {
+                    self.resultSubject.onNext(.noResults)
+                }
             case .failure(let error):
                 self.resultSubject.onNext(.error(error.associatedValue))
             }
@@ -59,12 +63,11 @@ extension MoviesViewModel: MoviesViewModelType{
         } onCompleted: {
             self.showLoadingSubject.onNext(false)
         }.disposed(by: disposeBag)
-
     }
     
-    private func makeDatasource(movies: [Movie]) -> [MovieViewModel]{
-        return movies.map({ movie in
-            return MovieViewModelBuilder.prepareViewModel(movie: movie)
-        })
+    private func makeDatasource(movies: [Movie]) -> [MovieViewModel] {
+        return movies.map { [unowned self] movie in
+            MovieViewModelBuilder.prepareViewModel(movie: movie, image: { poster in self.useCase.downloadImage(poster) })
+        }
     }
 }

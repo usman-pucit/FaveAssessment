@@ -7,7 +7,7 @@
 
 import Foundation
 
-enum FError{
+enum FError: Error{
     case networkError
     case unknown(String)
     

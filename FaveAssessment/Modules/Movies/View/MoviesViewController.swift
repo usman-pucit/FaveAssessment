@@ -64,11 +64,9 @@ class MoviesViewController: UIViewController {
     private func handleResponse(_ result: MoviesViewModelState) {
         switch result {
         case .show(let movies):
-            if movies.isEmpty {
-                handleError("No results")
-            }else{
-                load(with: movies)
-            }
+            load(with: movies)
+        case .noResults:
+            break
         case .error(let message):
             handleError(message)
         }
