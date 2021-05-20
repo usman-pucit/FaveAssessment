@@ -8,49 +8,75 @@
 import RxSwift
 import UIKit
 
+/**
+    Movies listing view controller
+    Sorted list based on `Release date`, `Alphabetical order`,  `Rating`
+ */
 class MoviesViewController: UIViewController {
+    
+    // MARK: - IBOutlets
     
     @IBOutlet var tableView: UITableView!
     @IBOutlet var activityIndicator: UIActivityIndicatorView!
     
+    // MARK: - Properties
+    
     var viewModel: MoviesViewModel!
-   
     private let disposeBag = DisposeBag()
     private lazy var dataSource = makeDataSource()
-    
+    private lazy var refreshControl = UIRefreshControl()
+    private var isLoadingWithRefreshControl = false
+    // MARK: - Lifecycle method
     override func viewDidLoad() {
         super.viewDidLoad()
         configureUI()
         bindUI()
     }
     
+    /// Function to configure UI
     private func configureUI() {
         title = "Movies"
-        
         tableView.tableFooterView = UIView()
         tableView.registerNib(cellClass: MovieTableViewCell.self)
         tableView.dataSource = dataSource
-
+        
+        refreshControl.addTarget(self, action: #selector(self.refresh(_:)), for: .valueChanged)
+        tableView.addSubview(refreshControl)
     }
     
+    @objc func refresh(_ sender: AnyObject) {
+       isLoadingWithRefreshControl = true
+       fetchMovies()
+    }
+    
+    /// Function to bind UI with ViewModel
     private func bindUI() {
-
+        /// binding activity loader
         viewModel.showLoadingObservable.subscribe { event in
             DispatchQueue.main.async {
-                if let value = event.element, value {
+                if let value = event.element, value && !self.isLoadingWithRefreshControl {
                     self.activityIndicator.startAnimating()
                 } else {
+                    self.isLoadingWithRefreshControl = false
+                    self.refreshControl.endRefreshing()
                     self.activityIndicator.stopAnimating()
                 }
             }
         }.disposed(by: disposeBag)
         
+        /// binding `fetchMovies` results with UI
         viewModel.resultObservable.subscribe { result in
             self.handleResponse(result)
         } onError: { error in
             self.handleError(error.localizedDescription)
         }.disposed(by: disposeBag)
-
+        
+        /// network call to fetch movies
+        fetchMovies()
+    }
+    
+    
+    private func fetchMovies(){
         var parameters = [String: String]()
         parameters["api_key"] = Environment.TMDB_API_KEY
         parameters["primary_release_date.lte"] = "2016-12-31"
@@ -66,7 +92,7 @@ class MoviesViewController: UIViewController {
         case .show(let movies):
             load(with: movies)
         case .noResults:
-            break
+            handleError("No results")
         case .error(let message):
             handleError(message)
         }
