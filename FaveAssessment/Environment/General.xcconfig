@@ -1,0 +1,12 @@
+//
+//  General.xcconfig
+//  FaveAssessment
+//
+//  Created by Muhammad Usman on 20/05/2021.
+//
+
+// Configuration settings file format documentation can be found at:
+// https://help.apple.com/xcode/#/dev745c5c974
+
+BASE_URL          = http:/$()/api.themoviedb.org/3/discover/movie
+API_KEY           = 328c283cd27bd1877d9080ccb1604c91
