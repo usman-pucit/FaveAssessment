@@ -20,8 +20,9 @@ protocol MoviesViewModelType {
 }
 
 class MoviesViewModel {
+    
     // MARK: - Properties
-
+    var selectionSubject = PublishSubject<Int>()
     var showLoadingObservable: Observable<Bool> {
         return showLoadingSubject.asObservable()
     }
@@ -50,7 +51,7 @@ extension MoviesViewModel: MoviesViewModelType {
             guard let `self` = self else { return }
             switch response {
             case .success(let data):
-                if let movies = data.items, !movies.isEmpty {
+                if let movies = data.results, !movies.isEmpty {
                     self.resultSubject.onNext(.show(self.makeDatasource(movies: movies)))
                 } else {
                     self.resultSubject.onNext(.noResults)

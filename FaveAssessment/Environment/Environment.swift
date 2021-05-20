@@ -27,8 +27,8 @@ public enum Environment {
         return dict
     }()
     
-    static let BASE_URL: String = {
-        guard let baseURL = Environment.infoDictionary[Keys.Plist.BASE_URL] as? String else{
+    static let BASE_URL: URL = {
+        guard let urlString = Environment.infoDictionary[Keys.Plist.BASE_URL] as? String, let baseURL = URL(string: urlString) else{
             fatalError("BASE_URL not found")
         }
         return baseURL

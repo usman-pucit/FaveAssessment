@@ -26,6 +26,7 @@ class MoviesViewController: UIViewController {
     private lazy var dataSource = makeDataSource()
     private lazy var refreshControl = UIRefreshControl()
     private var isLoadingWithRefreshControl = false
+    
     // MARK: - Lifecycle method
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -36,6 +37,8 @@ class MoviesViewController: UIViewController {
     /// Function to configure UI
     private func configureUI() {
         title = "Movies"
+        navigationController?.navigationBar.prefersLargeTitles = true
+//        navigationItem.largeTitleDisplayMode = .never
         tableView.tableFooterView = UIView()
         tableView.registerNib(cellClass: MovieTableViewCell.self)
         tableView.dataSource = dataSource
@@ -70,27 +73,21 @@ class MoviesViewController: UIViewController {
         } onError: { error in
             self.handleError(error.localizedDescription)
         }.disposed(by: disposeBag)
-        
+
         /// network call to fetch movies
         fetchMovies()
     }
     
     
     private func fetchMovies(){
-        var parameters = [String: String]()
-        parameters["api_key"] = Environment.TMDB_API_KEY
-        parameters["primary_release_date.lte"] = "2016-12-31"
-        parameters["sort_by"] = "release_date.desc"
-        parameters["page"] = "1"
-        
-        let request = Request(parameters: parameters)
+        let request = Request.movies()
         viewModel.fetchMovies(request)
     }
     
     private func handleResponse(_ result: MoviesViewModelState) {
         switch result {
         case .show(let movies):
-            load(with: movies)
+            configure(with: movies)
         case .noResults:
             handleError("No results")
         case .error(let message):
@@ -122,12 +119,20 @@ fileprivate extension MoviesViewController{
         )
     }
     
-    func load(with movies: [MovieViewModel], animate: Bool = true) {
+    func configure(with movies: [MovieViewModel], animate: Bool = true) {
         DispatchQueue.main.async {
             var snapshot = NSDiffableDataSourceSnapshot<Section, MovieViewModel>()
             snapshot.appendSections(Section.allCases)
             snapshot.appendItems(movies, toSection: .movies)
             self.dataSource.apply(snapshot, animatingDifferences: animate)
         }
+    }
+}
+
+extension MoviesViewController: UITableViewDelegate {
+
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        viewModel.selectionSubject.onNext(dataSource.snapshot().itemIdentifiers[indexPath.row].id)
+        tableView.deselectRow(at: indexPath, animated: true)
     }
 }

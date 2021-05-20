@@ -12,6 +12,7 @@ import UIKit
 /// Abstract functions
 protocol MoviesUseCaseType {
     func fetchMovies(_ request: Request) -> Observable<FResult<Movies, FError>>
+    func fetchMovieDetails(_ request: Request) -> Observable<FResult<Movie, FError>>
     func downloadImage(_ poster: String) -> Observable<UIImage?>
 }
 
@@ -32,6 +33,10 @@ extension MoviesUseCase: MoviesUseCaseType {
         return apiClient.execute(request)
     }
 
+    func fetchMovieDetails(_ request: Request) -> Observable<FResult<Movie, FError>>{
+        return apiClient.execute(request)
+    }
+    
     func downloadImage(_ poster: String) -> Observable<UIImage?> {
         let url = Environment.TMDB_IMAGE_URL.appendingPathComponent(poster)
         return apiClient

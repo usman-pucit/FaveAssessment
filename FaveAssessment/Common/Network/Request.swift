@@ -27,7 +27,7 @@ enum FResult<Value,FError> {
 }
 
 struct Request{
-    var url: URL = URL(string: Environment.BASE_URL)!
+    var url: URL
     let parameters: [String: CustomStringConvertible]
     var request: URLRequest? {
         guard var components = URLComponents(url: url, resolvingAgainstBaseURL: false) else {
@@ -42,7 +42,33 @@ struct Request{
         return URLRequest(url: url)
     }
 
-    init(parameters: [String: CustomStringConvertible] = [:]) {
+    init(url: URL = Environment.BASE_URL, parameters: [String: CustomStringConvertible] = [:]) {
+        self.url = url
         self.parameters = parameters
+    }
+}
+
+extension Request{
+    
+    static func movies() -> Request {
+        let url = Environment.BASE_URL.appendingPathComponent("/discover/movie")
+        let parameters: [String : CustomStringConvertible] = [
+            "api_key": Environment.TMDB_API_KEY,
+            "primary_release_date.lte": "2016-12-31",
+            "sort_by": "release_date.desc",
+            "page": "1"
+            ]
+        return Request(url: url, parameters: parameters)
+    }
+
+    static func details(movieId: Int) -> Request {
+        let url = Environment.BASE_URL.appendingPathComponent("/movie/\(movieId)")
+        let parameters: [String : CustomStringConvertible] = [
+            "api_key": Environment.TMDB_API_KEY,
+            "primary_release_date.lte": "2016-12-31",
+            "sort_by": "release_date.desc",
+            "page": "1"
+            ]
+        return Request(url: url, parameters: parameters)
     }
 }

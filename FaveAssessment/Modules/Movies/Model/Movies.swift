@@ -1,58 +1,45 @@
 //
 //  Date.swift
-//  HahnAssignment
+//  FaveAssessment
 //
-//  Created by Muhammad Usman on 06/12/2020.
+//  Created by Muhammad Usman on 19/05/2021.
 //
 
 import Foundation
 
 struct Movies: Decodable {
-    let items: [Movie]?
+    let results: [Movie]?
     let page : Int?
-    let totalPages : Int?
-    let totalResults : Int?
-    
-    enum CodingKeys: String, CodingKey {
-        case items = "results"
-        case page = "page"
-        case totalPages = "total_pages"
-        case totalResults = "total_results"
-    }
+    let total_pages : Int?
+    let total_results : Int?
 }
 
 
 struct Movie: Decodable {
     let adult : Bool?
     let backdrop_path : String?
-    let genre_ids : [Int]?
+    let budget : Int?
+    let genres : [Genres]?
+    let homepage : String?
     let id : Int?
+    let imdb_id : String?
     let original_language : String?
     let original_title : String?
     let overview : String?
     let popularity : Double?
     let poster_path : String?
     let release_date : String?
+    let revenue : Int?
+    let runtime : Int?
+    let status : String?
+    let tagline : String?
     let title : String?
     let video : Bool?
     let vote_average : Double?
     let vote_count : Int?
+}
 
-    enum CodingKeys: String, CodingKey {
-
-        case adult = "adult"
-        case backdrop_path = "backdrop_path"
-        case genre_ids = "genre_ids"
-        case id = "id"
-        case original_language = "original_language"
-        case original_title = "original_title"
-        case overview = "overview"
-        case popularity = "popularity"
-        case poster_path = "poster_path"
-        case release_date = "release_date"
-        case title = "title"
-        case video = "video"
-        case vote_average = "vote_average"
-        case vote_count = "vote_count"
-    }
+struct Genres : Decodable {
+    let id : Int?
+    let name : String?
 }

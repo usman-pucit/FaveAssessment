@@ -22,7 +22,18 @@ class MoviesCoordinator: RxCoordinator<Void> {
         let viewModel = MoviesViewModel(useCase: MoviesUseCase())
         viewController.viewModel = viewModel
         
+        viewModel.selectionSubject.subscribe({ event in
+            if let movieId = event.element{
+                self.coordinateToMovieDetails(movieId)
+            }
+        }).disposed(by: disposeBag)
         return Observable.never()
     }
     
+    private func coordinateToMovieDetails(_ movieId: Int) -> Observable<Void>{
+        let movieDetailCoordinator = MovieDetailsCoordinator(rootViewController: rootViewController)
+        movieDetailCoordinator.movieId = movieId
+        return coordinate(to: movieDetailCoordinator)
+            .map { _ in () }
+    }
 }

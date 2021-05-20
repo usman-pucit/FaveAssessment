@@ -14,13 +14,10 @@ struct MovieViewModel {
     let title: String
     let poster: Observable<UIImage?>
     let rating: String
-
-    init(id: Int, title: String, poster: Observable<UIImage?>, rating: String) {
-        self.id = id
-        self.title = title
-        self.poster = poster
-        self.rating = rating
-    }
+    let synopsis: String
+    let duration: String
+    let language: String
+    let genre: String
 }
 
 extension MovieViewModel: Hashable {
