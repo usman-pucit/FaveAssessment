@@ -5,15 +5,22 @@
 //  Created by Muhammad Usman on 19/05/2021.
 //
 
+import DropDown
 import RxSwift
 import UIKit
+
+// Locally movies sorting enum
+enum SortMovies: Int {
+    case date = 0
+    case a_z
+    case popularity
+}
 
 /**
     Movies listing view controller
     Sorted list based on `Release date`, `Alphabetical order`,  `Rating`
  */
 class MoviesViewController: UIViewController {
-    
     // MARK: - IBOutlets
     
     @IBOutlet var tableView: UITableView!
@@ -28,6 +35,7 @@ class MoviesViewController: UIViewController {
     private var isLoadingWithRefreshControl = false
     
     // MARK: - Lifecycle method
+
     override func viewDidLoad() {
         super.viewDidLoad()
         configureUI()
@@ -43,13 +51,13 @@ class MoviesViewController: UIViewController {
         tableView.registerNib(cellClass: MovieTableViewCell.self)
         tableView.dataSource = dataSource
         
-        refreshControl.addTarget(self, action: #selector(self.refresh(_:)), for: .valueChanged)
+        refreshControl.addTarget(self, action: #selector(refresh(_:)), for: .valueChanged)
         tableView.addSubview(refreshControl)
     }
     
     @objc func refresh(_ sender: AnyObject) {
-       isLoadingWithRefreshControl = true
-       fetchMovies()
+        isLoadingWithRefreshControl = true
+        fetchMovies()
     }
     
     /// Function to bind UI with ViewModel
@@ -57,7 +65,7 @@ class MoviesViewController: UIViewController {
         /// binding activity loader
         viewModel.showLoadingObservable.subscribe { event in
             DispatchQueue.main.async {
-                if let value = event.element, value && !self.isLoadingWithRefreshControl {
+                if let value = event.element, value, !self.isLoadingWithRefreshControl {
                     self.activityIndicator.startAnimating()
                 } else {
                     self.isLoadingWithRefreshControl = false
@@ -74,14 +82,31 @@ class MoviesViewController: UIViewController {
             self.handleError(error.localizedDescription)
         }.disposed(by: disposeBag)
 
+        tableView.rx
+            .itemSelected
+            .subscribe(onNext: { [weak self] indexPath in
+                guard let `self` = self else { return }
+                self.viewModel.selectionSubject.onNext(self.dataSource.snapshot().itemIdentifiers[indexPath.row].id)
+                self.tableView.deselectRow(at: indexPath, animated: true)
+            }).disposed(by: disposeBag)
+        
+        tableView.rx
+            .willDisplayCell
+            .subscribe(onNext: { [weak self] _, indexPath in
+                guard let `self` = self else { return }
+                if self.viewModel.currentPage < self.viewModel.totalPages, indexPath.row == self.dataSource.snapshot().numberOfItems - 1 {
+                    self.viewModel.currentPage += 1
+                    self.fetchMovies()
+                }
+            }).disposed(by: disposeBag)
+        
         /// network call to fetch movies
         fetchMovies()
     }
     
-    
-    private func fetchMovies(){
-        let request = Request.movies()
-        viewModel.fetchMovies(request)
+    private func fetchMovies() {
+        let request = Request.movies(page: viewModel.currentPage)
+        viewModel.fetchMovies(request, isRefresh: isLoadingWithRefreshControl)
     }
     
     private func handleResponse(_ result: MoviesViewModelState) {
@@ -95,12 +120,25 @@ class MoviesViewController: UIViewController {
         }
     }
     
-    private func handleError(_ message: String) {
+    private func handleError(_ message: String) {}
+    
+    @IBAction func filterTapped(_ sender: UIBarButtonItem) {
+        let dropDown = DropDown()
+        dropDown.anchorView = sender
+        dropDown.dataSource = ["Release date", "A to Z", "Popularity"]
         
+        // Action triggered on selection
+        dropDown.selectionAction = { [unowned self] (index: Int, _: String) in
+            if let sortType = SortMovies(rawValue: index) {
+                self.viewModel.sortMovies(by: sortType)
+            }
+            dropDown.hide()
+        }
+        dropDown.show()
     }
 }
 
-fileprivate extension MoviesViewController{
+private extension MoviesViewController {
     enum Section: CaseIterable {
         case movies
     }
@@ -108,7 +146,7 @@ fileprivate extension MoviesViewController{
     func makeDataSource() -> UITableViewDiffableDataSource<Section, MovieViewModel> {
         return UITableViewDiffableDataSource(
             tableView: tableView,
-            cellProvider: {  tableView, indexPath, movieViewModel in
+            cellProvider: { tableView, _, movieViewModel in
                 guard let cell = tableView.dequeueReusableCell(withClass: MovieTableViewCell.self) else {
                     assertionFailure("Failed to dequeue \(MovieTableViewCell.self)!")
                     return UITableViewCell()
@@ -124,15 +162,7 @@ fileprivate extension MoviesViewController{
             var snapshot = NSDiffableDataSourceSnapshot<Section, MovieViewModel>()
             snapshot.appendSections(Section.allCases)
             snapshot.appendItems(movies, toSection: .movies)
-            self.dataSource.apply(snapshot, animatingDifferences: animate)
+            self.dataSource.apply(snapshot, animatingDifferences: false)
         }
-    }
-}
-
-extension MoviesViewController: UITableViewDelegate {
-
-    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        viewModel.selectionSubject.onNext(dataSource.snapshot().itemIdentifiers[indexPath.row].id)
-        tableView.deselectRow(at: indexPath, animated: true)
     }
 }

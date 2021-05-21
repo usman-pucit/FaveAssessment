@@ -28,6 +28,7 @@
 		1848DA24265533AE0050EEB5 /* MoviesUseCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1848DA02265533AE0050EEB5 /* MoviesUseCase.swift */; };
 		1848DA4E265560200050EEB5 /* APIClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1848DA4B265560200050EEB5 /* APIClient.swift */; };
 		1848DA4F265560200050EEB5 /* Request.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1848DA4C265560200050EEB5 /* Request.swift */; };
+		188B7109265853BB00330AB7 /* DropDown in Frameworks */ = {isa = PBXBuildFile; productRef = 188B7108265853BB00330AB7 /* DropDown */; };
 		18BA338626559F850037C4C6 /* RxSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 18BA338526559F850037C4C6 /* RxSwift */; };
 		18BA338826559F850037C4C6 /* RxCocoa in Frameworks */ = {isa = PBXBuildFile; productRef = 18BA338726559F850037C4C6 /* RxCocoa */; };
 		18BA338A26559F850037C4C6 /* RxRelay in Frameworks */ = {isa = PBXBuildFile; productRef = 18BA338926559F850037C4C6 /* RxRelay */; };
@@ -103,6 +104,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				18BA338A26559F850037C4C6 /* RxRelay in Frameworks */,
+				188B7109265853BB00330AB7 /* DropDown in Frameworks */,
 				18BA338826559F850037C4C6 /* RxCocoa in Frameworks */,
 				18BA338626559F850037C4C6 /* RxSwift in Frameworks */,
 			);
@@ -403,6 +405,7 @@
 				18BA338526559F850037C4C6 /* RxSwift */,
 				18BA338726559F850037C4C6 /* RxCocoa */,
 				18BA338926559F850037C4C6 /* RxRelay */,
+				188B7108265853BB00330AB7 /* DropDown */,
 			);
 			productName = FaveAssessment;
 			productReference = 1848D98826552CA60050EEB5 /* FaveAssessment.app */;
@@ -477,6 +480,7 @@
 			mainGroup = 1848D97F26552CA60050EEB5;
 			packageReferences = (
 				18BA338426559F850037C4C6 /* XCRemoteSwiftPackageReference "RxSwift" */,
+				188B7107265853BB00330AB7 /* XCRemoteSwiftPackageReference "DropDown" */,
 			);
 			productRefGroup = 1848D98926552CA60050EEB5 /* Products */;
 			projectDirPath = "";
@@ -889,6 +893,14 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
+		188B7107265853BB00330AB7 /* XCRemoteSwiftPackageReference "DropDown" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/AssistoLab/DropDown.git";
+			requirement = {
+				branch = master;
+				kind = branch;
+			};
+		};
 		18BA338426559F850037C4C6 /* XCRemoteSwiftPackageReference "RxSwift" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/ReactiveX/RxSwift.git";
@@ -900,6 +912,11 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		188B7108265853BB00330AB7 /* DropDown */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 188B7107265853BB00330AB7 /* XCRemoteSwiftPackageReference "DropDown" */;
+			productName = DropDown;
+		};
 		18BA338526559F850037C4C6 /* RxSwift */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 18BA338426559F850037C4C6 /* XCRemoteSwiftPackageReference "RxSwift" */;

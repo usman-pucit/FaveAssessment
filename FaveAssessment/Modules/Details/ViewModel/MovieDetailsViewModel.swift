@@ -68,6 +68,6 @@ extension MovieDetailsViewModel: MovieDetailsViewModelType{
     }
     
     private func makeDatasource(movie: Movie) -> MovieViewModel {
-        return MovieViewModelBuilder.prepareViewModel(movie: movie, image: { poster in self.useCase.downloadImage(poster) })
+        return MovieViewModelBuilder.prepareViewModel(movie: movie, image: { poster in self.useCase.downloadImage(poster, size: .original) })
     }
 }

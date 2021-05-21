@@ -11,4 +11,4 @@
 BASE_URL             = http:/$()/api.themoviedb.org/3
 API_KEY              = 328c283cd27bd1877d9080ccb1604c91
 IMAGE_URL            = https:/$()/image.tmdb.org/t/p/w154
-LARGE_IMAGE_URL      = https:/$()/image.tmdb.org/t/p/original
+ORIGINAL_IMAGE_URL      = https:/$()/image.tmdb.org/t/p/original

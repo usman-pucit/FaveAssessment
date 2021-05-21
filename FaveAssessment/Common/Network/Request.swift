@@ -50,13 +50,13 @@ struct Request{
 
 extension Request{
     
-    static func movies() -> Request {
+    static func movies(page: Int) -> Request {
         let url = Environment.BASE_URL.appendingPathComponent("/discover/movie")
         let parameters: [String : CustomStringConvertible] = [
             "api_key": Environment.TMDB_API_KEY,
             "primary_release_date.lte": "2016-12-31",
             "sort_by": "release_date.desc",
-            "page": "1"
+            "page": "\(page)"
             ]
         return Request(url: url, parameters: parameters)
     }
@@ -64,10 +64,7 @@ extension Request{
     static func details(movieId: Int) -> Request {
         let url = Environment.BASE_URL.appendingPathComponent("/movie/\(movieId)")
         let parameters: [String : CustomStringConvertible] = [
-            "api_key": Environment.TMDB_API_KEY,
-            "primary_release_date.lte": "2016-12-31",
-            "sort_by": "release_date.desc",
-            "page": "1"
+            "api_key": Environment.TMDB_API_KEY
             ]
         return Request(url: url, parameters: parameters)
     }

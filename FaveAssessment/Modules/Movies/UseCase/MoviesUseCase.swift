@@ -9,11 +9,16 @@ import Foundation
 import RxSwift
 import UIKit
 
+enum PosterSize{
+    case small
+    case original
+}
+
 /// Abstract functions
 protocol MoviesUseCaseType {
     func fetchMovies(_ request: Request) -> Observable<FResult<Movies, FError>>
     func fetchMovieDetails(_ request: Request) -> Observable<FResult<Movie, FError>>
-    func downloadImage(_ poster: String) -> Observable<UIImage?>
+    func downloadImage(_ poster: String, size: PosterSize) -> Observable<UIImage?>
 }
 
 /**
@@ -37,10 +42,16 @@ extension MoviesUseCase: MoviesUseCaseType {
         return apiClient.execute(request)
     }
     
-    func downloadImage(_ poster: String) -> Observable<UIImage?> {
-        let url = Environment.TMDB_IMAGE_URL.appendingPathComponent(poster)
+    func downloadImage(_ poster: String, size: PosterSize) -> Observable<UIImage?>{
+        let url : URL!
+        if size == .original {
+            url = Environment.ORIGINAL_IMAGE_URL
+        }else{
+            url = Environment.TMDB_IMAGE_URL
+        }
+        let imageURL = url.appendingPathComponent(poster)
         return apiClient
-            .loadImage(url)
+            .loadImage(imageURL)
             .subscribe(on: ConcurrentDispatchQueueScheduler(qos: .background))
             .observe(on: MainScheduler.instance)
             .asObservable()

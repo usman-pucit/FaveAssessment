@@ -10,6 +10,7 @@ import RxSwift
 import Foundation
 
 struct MovieViewModel {
+    let uuid = UUID()
     let id: Int
     let title: String
     let poster: Observable<UIImage?>
@@ -22,10 +23,10 @@ struct MovieViewModel {
 
 extension MovieViewModel: Hashable {
     static func == (lhs: MovieViewModel, rhs: MovieViewModel) -> Bool {
-        return lhs.id == rhs.id
+        return lhs.uuid == rhs.uuid
     }
 
     func hash(into hasher: inout Hasher) {
-        hasher.combine(id)
+        hasher.combine(uuid)
     }
 }

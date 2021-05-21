@@ -54,6 +54,8 @@
 	<string>$(IMAGE_URL)</string>
 	<key>API_KEY</key>
 	<string>$(API_KEY)</string>
+	<key>ORIGINAL_IMAGE_URL</key>
+	<string>$(ORIGINAL_IMAGE_URL)</string>
 	<key>UIMainStoryboardFile</key>
 	<string>Main</string>
 	<key>UIRequiredDeviceCapabilities</key>

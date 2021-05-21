@@ -5,6 +5,7 @@
 //  Created by Muhammad Usman on 19/05/2021.
 //
 
+import UIKit
 import RxCocoa
 import RxSwift
 
@@ -16,7 +17,8 @@ enum MoviesViewModelState {
 }
 
 protocol MoviesViewModelType {
-    func fetchMovies(_ request: Request)
+    func fetchMovies(_ request: Request, isRefresh: Bool)
+    func sortMovies(by type: SortMovies)
 }
 
 class MoviesViewModel {
@@ -31,12 +33,16 @@ class MoviesViewModel {
         return resultSubject.asObservable()
     }
     
+    var currentPage = 1
+    var totalPages = 1
     // MARK: - Private properties
-    
+  
+    private var sortType: SortMovies = .date
     private let disposeBag = DisposeBag()
     private let showLoadingSubject = BehaviorSubject<Bool>(value: false)
     private let resultSubject = PublishSubject<MoviesViewModelState>()
     private let useCase: MoviesUseCaseType
+    private var moviesArray = [Movie]()
     
     init(useCase: MoviesUseCaseType) {
         self.useCase = useCase
@@ -44,15 +50,20 @@ class MoviesViewModel {
 }
 
 extension MoviesViewModel: MoviesViewModelType {
-    func fetchMovies(_ request: Request) {
+    func fetchMovies(_ request: Request, isRefresh: Bool){
         showLoadingSubject.onNext(true)
         
         useCase.fetchMovies(request).subscribe { [weak self] response in
             guard let `self` = self else { return }
             switch response {
             case .success(let data):
+                self.currentPage = data.page ?? 0
+                self.totalPages = data.total_pages ?? 0
                 if let movies = data.results, !movies.isEmpty {
-                    self.resultSubject.onNext(.show(self.makeDatasource(movies: movies)))
+                    if !isRefresh {
+                        self.moviesArray += movies
+                    }
+                    self.sortMovies(by: self.sortType)
                 } else {
                     self.resultSubject.onNext(.noResults)
                 }
@@ -68,7 +79,23 @@ extension MoviesViewModel: MoviesViewModelType {
     
     private func makeDatasource(movies: [Movie]) -> [MovieViewModel] {
         return movies.map { [unowned self] movie in
-            MovieViewModelBuilder.prepareViewModel(movie: movie, image: { poster in self.useCase.downloadImage(poster) })
+            MovieViewModelBuilder.prepareViewModel(movie: movie, image: { poster in self.useCase.downloadImage(poster, size: .small) })
         }
+    }
+    
+    func sortMovies(by type: SortMovies){
+        self.sortType = type
+        switch type {
+        case .date:
+            let dateFormatter = DateFormatter()
+            dateFormatter.dateFormat = "yyyy-MM-dd"
+            self.moviesArray = moviesArray.sorted(by: { dateFormatter.date(from: $0.release_date ?? "")!.compare(dateFormatter.date(from: $1.release_date ?? "")!) == .orderedDescending })
+        case .a_z:
+            self.moviesArray = moviesArray.sorted(by: { $0.title ?? "" < $1.title ?? "" })
+        case .popularity:
+            self.moviesArray = moviesArray.sorted(by: { $0.popularity ?? 0 > $1.popularity ?? 0 })
+        }
+        
+        self.resultSubject.onNext(.show(self.makeDatasource(movies: self.moviesArray)))
     }
 }
