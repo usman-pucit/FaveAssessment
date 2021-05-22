@@ -24,7 +24,7 @@ struct MovieViewModel {
 
 extension MovieViewModel: Hashable {
     static func == (lhs: MovieViewModel, rhs: MovieViewModel) -> Bool {
-        return lhs.uuid == rhs.uuid
+        return lhs.uuid == rhs.uuid && lhs.title == rhs.title
     }
 
     func hash(into hasher: inout Hasher) {

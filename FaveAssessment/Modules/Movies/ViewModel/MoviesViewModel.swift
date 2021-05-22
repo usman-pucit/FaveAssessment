@@ -101,7 +101,7 @@ extension MoviesViewModel: MoviesViewModelType {
         case .popularity:
             self.moviesArray = moviesArray.sorted(by: { $0.popularity ?? 0 > $1.popularity ?? 0 })
         }
-        
-        self.resultSubject.onNext(.show(self.makeDatasource(movies: self.moviesArray)))
+        let datasource = Array(Set(self.makeDatasource(movies: self.moviesArray)))
+        self.resultSubject.onNext(.show(datasource))
     }
 }
