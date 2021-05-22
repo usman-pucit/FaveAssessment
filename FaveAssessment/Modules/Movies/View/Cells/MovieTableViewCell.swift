@@ -17,6 +17,8 @@ class MovieTableViewCell: UITableViewCell {
     
     @IBOutlet private var titleLabel: UILabel!
     @IBOutlet private var ratingLabel: UILabel!
+    @IBOutlet private var releaseDateLabel: UILabel!
+    @IBOutlet private var genreLabel: UILabel!
     @IBOutlet private var posterImageView: UIImageView!
 
     // MARK: - Properties
@@ -26,6 +28,8 @@ class MovieTableViewCell: UITableViewCell {
     func configure(with viewModel: MovieViewModel) {
         titleLabel.text = viewModel.title
         ratingLabel.text = viewModel.rating
+        genreLabel.text = viewModel.genre
+        releaseDateLabel.text = viewModel.releaseDate
         viewModel
             .poster
             .bind(to: posterImageView.rx.image)

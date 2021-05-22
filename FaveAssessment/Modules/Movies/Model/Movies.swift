@@ -19,7 +19,7 @@ struct Movie: Decodable {
     let adult : Bool?
     let backdrop_path : String?
     let budget : Int?
-    let genres : [Genres]?
+    let genre_ids : [Int]?
     let homepage : String?
     let id : Int?
     let imdb_id : String?
@@ -37,9 +37,4 @@ struct Movie: Decodable {
     let video : Bool?
     let vote_average : Double?
     let vote_count : Int?
-}
-
-struct Genres : Decodable {
-    let id : Int?
-    let name : String?
 }

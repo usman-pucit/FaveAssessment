@@ -8,20 +8,24 @@
 import RxSwift
 import Foundation
 
+// Response result object
 enum MovieDetailsViewModelState {
     case show(MovieViewModel)
     case error(String)
 }
 
+// Abstract layer for ViewModel
 protocol MovieDetailsViewModelType {
-    // Properties
     var movieId: Int! {get set}
     var showLoadingObservable: Observable<Bool>! {get}
     var resultObservable: Observable<MovieDetailsViewModelState>! {get}
     
-    // Functions
+    /// Function to fetch movie details
     func fetchMovieDetails(_ request: Request)
 }
+
+// MARK: - Class
+// Movie details ViewModel
 
 class MovieDetailsViewModel {
     
@@ -31,7 +35,6 @@ class MovieDetailsViewModel {
     var showLoadingObservable: Observable<Bool>! {
         return showLoadingSubject.asObservable()
     }
-    
     var resultObservable: Observable<MovieDetailsViewModelState>! {
         return resultSubject.asObservable()
     }
@@ -42,11 +45,13 @@ class MovieDetailsViewModel {
     private let showLoadingSubject = BehaviorSubject<Bool>(value: false)
     private let resultSubject = PublishSubject<MovieDetailsViewModelState>()
     
+    // MARK: - Initialiser
     init(useCase: MoviesUseCaseType) {
         self.useCase = useCase
     }
 }
 
+// MARK: - Extension
 extension MovieDetailsViewModel: MovieDetailsViewModelType{
 
     func fetchMovieDetails(_ request: Request) {
@@ -67,6 +72,9 @@ extension MovieDetailsViewModel: MovieDetailsViewModelType{
         }.disposed(by: disposeBag)
     }
     
+    /** Function to make movie details ViewModel
+     -  parameter : `Movie` object
+     */
     private func makeDatasource(movie: Movie) -> MovieViewModel {
         return MovieViewModelBuilder.prepareViewModel(movie: movie, image: { poster in self.useCase.downloadImage(poster, size: .original) })
     }

@@ -130,7 +130,6 @@
 		182E9E5E2656D8D8001E9C84 /* Details */ = {
 			isa = PBXGroup;
 			children = (
-				182E9E6A2656D954001E9C84 /* Model */,
 				182E9E692656D94A001E9C84 /* ViewModel */,
 				182E9E602656D8F1001E9C84 /* Coordinator */,
 				182E9E5F2656D8E3001E9C84 /* View */,
@@ -160,13 +159,6 @@
 				182E9E712656D9EA001E9C84 /* MovieDetailsViewModel.swift */,
 			);
 			path = ViewModel;
-			sourceTree = "<group>";
-		};
-		182E9E6A2656D954001E9C84 /* Model */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = Model;
 			sourceTree = "<group>";
 		};
 		1848D97F26552CA60050EEB5 = {

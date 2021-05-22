@@ -8,6 +8,9 @@
 import UIKit
 import RxSwift
 
+// MARK: - Class
+// Movie details view controller
+
 class MovieDetailsViewController: UIViewController{
     
     // MARK: - IBOutlets
@@ -34,6 +37,7 @@ class MovieDetailsViewController: UIViewController{
     
     private func configureUI(){
         title = "Details"
+        overrideUserInterfaceStyle = .dark
     }
     
     private func bindUI(){
@@ -48,7 +52,7 @@ class MovieDetailsViewController: UIViewController{
             }
         }.disposed(by: disposeBag)
         
-        /// binding `fetchMovies` results with UI
+        /// binding `fetchMovies` results with view
         viewModel.resultObservable.subscribe { result in
             self.handleResponse(result)
         } onError: { error in
@@ -75,14 +79,16 @@ class MovieDetailsViewController: UIViewController{
     }
     
     private func handleError(_ message: String) {
-        
+        DispatchQueue.main.async {
+            self.showAlert(with: "Error", message: message)
+        }
     }
     
     private func configure(_ movie: MovieViewModel){
         synopsisLabel.text = movie.synopsis
         titleLabel.text = movie.title
-        durationLabel.text = movie.duration
-        languageLabel.text = movie.language
+        durationLabel.text = "Time: "+movie.duration
+        languageLabel.text = "Language: "+movie.language
         genreLabel.text = movie.genre
         movie
             .poster

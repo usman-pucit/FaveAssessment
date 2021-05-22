@@ -7,6 +7,10 @@
 
 import Foundation
 
+/**
+ Environment class to manage environment settings and api url's
+ */
+
 public enum Environment {
     // MARK: - Keys
     

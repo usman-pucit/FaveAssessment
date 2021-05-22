@@ -9,10 +9,13 @@ import Foundation
 import RxSwift
 import UIKit
 
+// MARK: - Class
+// Movie details coordinator
 class MovieDetailsCoordinator: RxCoordinator<Void> {
     let rootViewController: UIViewController
     public var movieId: Int!
 
+    // MARK: - Initialiser
     init(rootViewController: UIViewController) {
         self.rootViewController = rootViewController
     }

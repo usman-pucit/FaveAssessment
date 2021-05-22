@@ -45,19 +45,18 @@ class MoviesViewController: UIViewController {
     /// Function to configure UI
     private func configureUI() {
         title = "Movies"
-        navigationController?.navigationBar.prefersLargeTitles = true
-//        navigationItem.largeTitleDisplayMode = .never
+        overrideUserInterfaceStyle = .dark
+        
         tableView.tableFooterView = UIView()
         tableView.registerNib(cellClass: MovieTableViewCell.self)
         tableView.dataSource = dataSource
-        
         refreshControl.addTarget(self, action: #selector(refresh(_:)), for: .valueChanged)
         tableView.addSubview(refreshControl)
     }
     
     @objc func refresh(_ sender: AnyObject) {
         isLoadingWithRefreshControl = true
-        fetchMovies()
+        viewModel.refreshMovies()
     }
     
     /// Function to bind UI with ViewModel
@@ -106,7 +105,7 @@ class MoviesViewController: UIViewController {
     
     private func fetchMovies() {
         let request = Request.movies(page: viewModel.currentPage)
-        viewModel.fetchMovies(request, isRefresh: isLoadingWithRefreshControl)
+        viewModel.fetchMovies(request)
     }
     
     private func handleResponse(_ result: MoviesViewModelState) {

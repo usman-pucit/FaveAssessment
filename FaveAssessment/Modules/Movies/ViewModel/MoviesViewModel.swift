@@ -17,7 +17,8 @@ enum MoviesViewModelState {
 }
 
 protocol MoviesViewModelType {
-    func fetchMovies(_ request: Request, isRefresh: Bool)
+    func fetchMovies(_ request: Request)
+    func refreshMovies()
     func sortMovies(by type: SortMovies)
 }
 
@@ -50,7 +51,14 @@ class MoviesViewModel {
 }
 
 extension MoviesViewModel: MoviesViewModelType {
-    func fetchMovies(_ request: Request, isRefresh: Bool){
+    
+    func refreshMovies(){
+        self.moviesArray.removeAll()
+        let request = Request.movies(page: 1)
+        fetchMovies(request)
+    }
+    
+    func fetchMovies(_ request: Request){
         showLoadingSubject.onNext(true)
         
         useCase.fetchMovies(request).subscribe { [weak self] response in
@@ -60,9 +68,7 @@ extension MoviesViewModel: MoviesViewModelType {
                 self.currentPage = data.page ?? 0
                 self.totalPages = data.total_pages ?? 0
                 if let movies = data.results, !movies.isEmpty {
-                    if !isRefresh {
-                        self.moviesArray += movies
-                    }
+                    self.moviesArray += movies
                     self.sortMovies(by: self.sortType)
                 } else {
                     self.resultSubject.onNext(.noResults)

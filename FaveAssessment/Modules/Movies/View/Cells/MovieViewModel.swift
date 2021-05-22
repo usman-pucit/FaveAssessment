@@ -10,7 +10,7 @@ import RxSwift
 import Foundation
 
 struct MovieViewModel {
-    let uuid = UUID()
+    let uuid : String
     let id: Int
     let title: String
     let poster: Observable<UIImage?>
@@ -19,6 +19,7 @@ struct MovieViewModel {
     let duration: String
     let language: String
     let genre: String
+    let releaseDate: String
 }
 
 extension MovieViewModel: Hashable {

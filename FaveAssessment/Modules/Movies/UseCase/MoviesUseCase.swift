@@ -35,6 +35,8 @@ class MoviesUseCase {
 /// Extension
 extension MoviesUseCase: MoviesUseCaseType {
     func fetchMovies(_ request: Request) -> Observable<FResult<Movies, FError>> {
+        print("URL:: ",request.url)
+        print("Params:: ",request.parameters)
         return apiClient.execute(request)
     }
 
