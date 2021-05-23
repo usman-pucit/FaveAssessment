@@ -28,6 +28,11 @@
 		1848DA24265533AE0050EEB5 /* MoviesUseCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1848DA02265533AE0050EEB5 /* MoviesUseCase.swift */; };
 		1848DA4E265560200050EEB5 /* APIClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1848DA4B265560200050EEB5 /* APIClient.swift */; };
 		1848DA4F265560200050EEB5 /* Request.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1848DA4C265560200050EEB5 /* Request.swift */; };
+		1850CB23265AEFF400D0C755 /* Mock.json in Resources */ = {isa = PBXBuildFile; fileRef = 1850CB22265AEFF400D0C755 /* Mock.json */; };
+		1850CB29265AF00500D0C755 /* mock_original.jpeg in Resources */ = {isa = PBXBuildFile; fileRef = 1850CB27265AF00500D0C755 /* mock_original.jpeg */; };
+		1850CB2A265AF00500D0C755 /* mock.jpeg in Resources */ = {isa = PBXBuildFile; fileRef = 1850CB28265AF00500D0C755 /* mock.jpeg */; };
+		1850CB2F265AF0F500D0C755 /* MockApiClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1850CB2E265AF0F500D0C755 /* MockApiClient.swift */; };
+		1850CB34265AF10A00D0C755 /* Decodable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1850CB33265AF10A00D0C755 /* Decodable.swift */; };
 		188B7109265853BB00330AB7 /* DropDown in Frameworks */ = {isa = PBXBuildFile; productRef = 188B7108265853BB00330AB7 /* DropDown */; };
 		18BA338626559F850037C4C6 /* RxSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 18BA338526559F850037C4C6 /* RxSwift */; };
 		18BA338826559F850037C4C6 /* RxCocoa in Frameworks */ = {isa = PBXBuildFile; productRef = 18BA338726559F850037C4C6 /* RxCocoa */; };
@@ -87,6 +92,11 @@
 		1848DA02265533AE0050EEB5 /* MoviesUseCase.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MoviesUseCase.swift; sourceTree = "<group>"; };
 		1848DA4B265560200050EEB5 /* APIClient.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = APIClient.swift; sourceTree = "<group>"; };
 		1848DA4C265560200050EEB5 /* Request.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Request.swift; sourceTree = "<group>"; };
+		1850CB22265AEFF400D0C755 /* Mock.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = Mock.json; sourceTree = "<group>"; };
+		1850CB27265AF00500D0C755 /* mock_original.jpeg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = mock_original.jpeg; sourceTree = "<group>"; };
+		1850CB28265AF00500D0C755 /* mock.jpeg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = mock.jpeg; sourceTree = "<group>"; };
+		1850CB2E265AF0F500D0C755 /* MockApiClient.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MockApiClient.swift; sourceTree = "<group>"; };
+		1850CB33265AF10A00D0C755 /* Decodable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Decodable.swift; sourceTree = "<group>"; };
 		18BA33932655A3C50037C4C6 /* Reusable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Reusable.swift; sourceTree = "<group>"; };
 		18BA33982655A4090037C4C6 /* UITableView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UITableView.swift; sourceTree = "<group>"; };
 		18BA33A02655A4B40037C4C6 /* MovieTableViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = MovieTableViewCell.xib; sourceTree = "<group>"; };
@@ -224,6 +234,8 @@
 		1848D9BF26552D1C0050EEB5 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				1850CB27265AF00500D0C755 /* mock_original.jpeg */,
+				1850CB28265AF00500D0C755 /* mock.jpeg */,
 				1848D99426552CA80050EEB5 /* Assets.xcassets */,
 				1848D99626552CA80050EEB5 /* LaunchScreen.storyboard */,
 				1848D99926552CA80050EEB5 /* Info.plist */,
@@ -263,6 +275,7 @@
 		1848D9E3265532870050EEB5 /* Extensions */ = {
 			isa = PBXGroup;
 			children = (
+				1850CB33265AF10A00D0C755 /* Decodable.swift */,
 				1848D9E4265532910050EEB5 /* UIViewController.swift */,
 				18BA33982655A4090037C4C6 /* UITableView.swift */,
 			);
@@ -354,6 +367,7 @@
 		18BA338E26559FCE0037C4C6 /* Environment */ = {
 			isa = PBXGroup;
 			children = (
+				1850CB22265AEFF400D0C755 /* Mock.json */,
 				18E34DC426565D6B00673E97 /* General.xcconfig */,
 				18E34DD726565E9E00673E97 /* Environment.swift */,
 			);
@@ -372,6 +386,7 @@
 		18E34DDC265670F000673E97 /* Managers */ = {
 			isa = PBXGroup;
 			children = (
+				1850CB2E265AF0F500D0C755 /* MockApiClient.swift */,
 				18E34DDD265670FB00673E97 /* ImageCacheManager.swift */,
 			);
 			path = Managers;
@@ -491,6 +506,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				1848D99826552CA80050EEB5 /* LaunchScreen.storyboard in Resources */,
+				1850CB23265AEFF400D0C755 /* Mock.json in Resources */,
+				1850CB2A265AF00500D0C755 /* mock.jpeg in Resources */,
+				1850CB29265AF00500D0C755 /* mock_original.jpeg in Resources */,
 				1848D99526552CA80050EEB5 /* Assets.xcassets in Resources */,
 				18BA33A22655A4B40037C4C6 /* MovieTableViewCell.xib in Resources */,
 				1848DA23265533AE0050EEB5 /* Main.storyboard in Resources */,
@@ -526,7 +544,9 @@
 				1848DA4F265560200050EEB5 /* Request.swift in Sources */,
 				182E9E722656D9EA001E9C84 /* MovieDetailsViewModel.swift in Sources */,
 				1848D98C26552CA60050EEB5 /* AppDelegate.swift in Sources */,
+				1850CB34265AF10A00D0C755 /* Decodable.swift in Sources */,
 				1848D98E26552CA60050EEB5 /* SceneDelegate.swift in Sources */,
+				1850CB2F265AF0F500D0C755 /* MockApiClient.swift in Sources */,
 				1848DA24265533AE0050EEB5 /* MoviesUseCase.swift in Sources */,
 				18BA33942655A3C50037C4C6 /* Reusable.swift in Sources */,
 				1848D9DA2655320F0050EEB5 /* CoordinatorProvider.swift in Sources */,
