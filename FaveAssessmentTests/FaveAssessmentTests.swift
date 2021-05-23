@@ -25,5 +25,88 @@ class MoviesViewModelTests: XCTestCase{
         super.tearDown()
     }
     
+    func testFetchMoviesRequest(){
+        viewModel.fetchMovies(Request())
+        let expectation = XCTestExpectation(description: "Date fetched")
+        
+        viewModel.resultObservable.subscribe { result in
+            switch result {
+            case .show(_):
+                expectation.fulfill()
+            case .noResults:
+                XCTAssert(false, "Failed")
+            case .error(_):
+                XCTAssert(false, "Failed")
+            }
+        } onError: { error in
+            XCTAssert(false, "Failed")
+        }.disposed(by: disposeBag)
+        
+    }
     
+    func testSortingOne(){
+        viewModel.fetchMovies(Request())
+        let expectation = XCTestExpectation(description: "Date fetched")
+        viewModel.sortType = .popularity
+        viewModel.resultObservable.subscribe { result in
+            switch result {
+            case .show(let movies):
+                if let movie = movies.first, movie.rating == "100" && movie.title == "XYZ"{
+                    expectation.fulfill()
+                }else{
+                    XCTAssert(false, "Failed")
+                }
+            case .noResults:
+                XCTAssert(false, "Failed")
+            case .error(_):
+                XCTAssert(false, "Failed")
+            }
+        } onError: { error in
+            XCTAssert(false, "Failed")
+        }.disposed(by: disposeBag)
+    }
+    
+    func testSortingTwo(){
+        viewModel.fetchMovies(Request())
+        let expectation = XCTestExpectation(description: "Date fetched")
+        viewModel.sortType = .a_z
+        viewModel.resultObservable.subscribe { result in
+            switch result {
+            case .show(let movies):
+                if let movie = movies.first, movie.rating == "10" && movie.title == "ABC"{
+                    expectation.fulfill()
+                }else{
+                    XCTAssert(false, "Failed")
+                }
+            case .noResults:
+                XCTAssert(false, "Failed")
+            case .error(_):
+                XCTAssert(false, "Failed")
+            }
+        } onError: { error in
+            XCTAssert(false, "Failed")
+        }.disposed(by: disposeBag)
+    }
+    
+    func testSortingThree(){
+        viewModel.fetchMovies(Request())
+        let expectation = XCTestExpectation(description: "Date fetched")
+        viewModel.sortType = .date
+        viewModel.resultObservable.subscribe { result in
+            switch result {
+            case .show(let movies):
+                if let movie = movies.first, movie.rating == "10" && movie.title == "ABC"{
+                    expectation.fulfill()
+                }else{
+                    XCTAssert(false, "Failed")
+                }
+            case .noResults:
+                XCTAssert(false, "Failed")
+            case .error(_):
+                XCTAssert(false, "Failed")
+            }
+        } onError: { error in
+            XCTAssert(false, "Failed")
+        }.disposed(by: disposeBag)
+    }
 }

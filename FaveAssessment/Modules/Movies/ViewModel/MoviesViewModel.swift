@@ -19,7 +19,7 @@ enum MoviesViewModelState {
 protocol MoviesViewModelType {
     func fetchMovies(_ request: Request)
     func refreshMovies()
-    func sortMovies(by type: SortMovies)
+    func sortMovies()
 }
 
 class MoviesViewModel {
@@ -38,7 +38,7 @@ class MoviesViewModel {
     var totalPages = 1
     // MARK: - Private properties
   
-    private var sortType: SortMovies = .date
+    var sortType: SortMovies = .date
     private let disposeBag = DisposeBag()
     private let showLoadingSubject = BehaviorSubject<Bool>(value: false)
     private let resultSubject = PublishSubject<MoviesViewModelState>()
@@ -69,7 +69,7 @@ extension MoviesViewModel: MoviesViewModelType {
                 self.totalPages = data.total_pages ?? 0
                 if let movies = data.results, !movies.isEmpty {
                     self.moviesArray += movies
-                    self.sortMovies(by: self.sortType)
+                    self.sortMovies()
                 } else {
                     self.resultSubject.onNext(.noResults)
                 }
@@ -89,19 +89,19 @@ extension MoviesViewModel: MoviesViewModelType {
         }
     }
     
-    func sortMovies(by type: SortMovies){
-        self.sortType = type
-        switch type {
+    func sortMovies(){
+        var datasource = Array(Set(self.makeDatasource(movies: self.moviesArray)))
+        switch sortType {
         case .date:
             let dateFormatter = DateFormatter()
             dateFormatter.dateFormat = "yyyy-MM-dd"
-            self.moviesArray = moviesArray.sorted(by: { dateFormatter.date(from: $0.release_date ?? "")!.compare(dateFormatter.date(from: $1.release_date ?? "")!) == .orderedDescending })
+            datasource = datasource.sorted(by: { dateFormatter.date(from: $0.releaseDate)!.compare(dateFormatter.date(from: $1.releaseDate)!) == .orderedDescending })
         case .a_z:
-            self.moviesArray = moviesArray.sorted(by: { $0.title ?? "" < $1.title ?? "" })
+            datasource = datasource.sorted(by: { $0.title < $1.title })
         case .popularity:
-            self.moviesArray = moviesArray.sorted(by: { $0.popularity ?? 0 > $1.popularity ?? 0 })
+            datasource = datasource.sorted(by: { $0.rating > $1.rating })
         }
-        let datasource = Array(Set(self.makeDatasource(movies: self.moviesArray)))
+        
         self.resultSubject.onNext(.show(datasource))
     }
 }

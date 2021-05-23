@@ -129,7 +129,8 @@ class MoviesViewController: UIViewController {
         // Action triggered on selection
         dropDown.selectionAction = { [unowned self] (index: Int, _: String) in
             if let sortType = SortMovies(rawValue: index) {
-                self.viewModel.sortMovies(by: sortType)
+                self.viewModel.sortType = sortType
+                self.viewModel.sortMovies()
             }
             dropDown.hide()
         }
@@ -157,6 +158,7 @@ private extension MoviesViewController {
     }
     
     func configure(with movies: [MovieViewModel], animate: Bool = true) {
+        
         DispatchQueue.main.async {
             var snapshot = NSDiffableDataSourceSnapshot<Section, MovieViewModel>()
             snapshot.appendSections(Section.allCases)
